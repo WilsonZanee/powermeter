@@ -7,7 +7,7 @@
 
 #define CALIBRATION_SAMPLES 40
 
-#define GYRO_INT_PIN A4
+#define GYRO_INT_PIN A4 //TODO Check pin on setup
 
 /**
  *  Calibrate and initialize the gyroscope
@@ -18,7 +18,7 @@ void gyroSetup() {
 
   gyro.initialize();
   // Set to +/- 1000dps.
-  gyro.setFullScaleGyroRange(MPU6050_GYRO_FS_1000);
+  gyro.setFullScaleGyroRange(MPU6050_GYRO_FS_1000); //TODO figure out what this is for
 
 #ifdef DEBUG
   // verify connection

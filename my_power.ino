@@ -1,8 +1,9 @@
 /**
  * Main
  */
- 
-#include <Wire.h>
+\
+//Importing standard libraries
+#include <Wire.h>  
 #include <bluefruit.h>
 #include <SD.h>
 #include <SPI.h>
@@ -10,55 +11,23 @@
 #include "MPU6050.h"
 #include "HX711.h"
 
-// Trek
+// Zane
 //#define DEBUG
-//#define BLE_LOGGING
 //#define CALIBRATE
-#define DISABLE_LOGGING  // to the SD
+//#define DISABLE_LOGGING  // to the SD
 // Crank length, in meters
-#define CRANK_RADIUS 0.1725
-#define LOAD_OFFSET 255904.f
-#define HX711_MULT  -2466.8989547
-#define GYRO_OFFSET -31
+#define CRANK_RADIUS 0.170
+#define LOAD_OFFSET 255904.f //need to get this from callibration
+#define HX711_MULT  -2466.8989547 //need to get this from callibration
+#define GYRO_OFFSET -31 //need to get this from callibration
 // Hooked up the wires backwards apparently, force is negated.
 // If it isn't, just set to 1.
 #define HOOKEDUPLOADBACKWARDS -1
-#define DEV_NAME "JrvsPwr"
-
-/*
-// Steve Merckx defines
-//#define DEBUG
-//#define BLE_LOGGING
-//#define CALIBRATE
-#define DISABLE_LOGGING  // to the SD
-// Crank length, in meters
-#define CRANK_RADIUS 0.1750
-#define LOAD_OFFSET -32000.f
-#define HX711_MULT  -2719.66716169
-#define GYRO_OFFSET 3
-// Hooked up the wires backwards apparently, force is negated.
-// If it isn't, just set to 1.
-#define HOOKEDUPLOADBACKWARDS -1
-#define DEV_NAME "JrvsPwr"
-*/
-
-// Allie Orbea defines
-/*
-//#define DEBUG
-//#define BLE_LOGGING
-//#define CALIBRATE
-#define DISABLE_LOGGING  // to the SD
-#define CRANK_RADIUS 0.1725
-#define LOAD_OFFSET 3300.f;  // Allie Orbea
-#define HX711_MULT  -2491.63452396
-#define GYRO_OFFSET -50
-#define HOOKEDUPLOADBACKWARDS -1
-#define DEV_NAME "AlPwr"
-*/
+#define DEV_NAME "WilsonZ"
 
 // Universal defines
 
-#define VBATPIN A7
+#define VBATPIN A7  //Battery Pin (I Think)
 
 // The pause for the loop, and based on testing the actual
 // calls overhead take about 20ms themselves E.g. at 50ms delay, 
@@ -77,7 +46,7 @@
 // is nice. 
 // TODO Though not optimal for power, not sure how much it takes.
 #define LED_PIN 33
-#define SD_CS_PIN 5
+#define SD_CS_PIN 5 //Set this pin
 
 MPU6050 gyro;
 HX711 load;
@@ -90,7 +59,6 @@ void setup() {
   // Setup, calibrate our other components
   gyroSetup();
   loadSetup();
-  bleSetup();
 
 #ifndef DISABLE_LOGGING
   // Setup our SD logger, if present.
@@ -152,9 +120,6 @@ void loop() {
 
   numPolls += 1;
 
-#ifdef BLE_LOGGING
-  blePublishLog("F%.1f|%.1f %d", force, dps, numPolls);
-#endif
 
 #ifdef DEBUG
   // Just print these values to the serial, something easy to read.

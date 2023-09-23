@@ -22,8 +22,8 @@
 #define NUM_RAW_SAMPLES 1
 
 // Pins we're using.
-#define EXCIT_POS A0
-#define EXCIT_NEG A1
+#define EXCIT_POS A0  //TODO Probably needs to be adjust for our setup
+#define EXCIT_NEG A1  //TODO Probably needs to be adjust for our setup
 
 void loadSetup() {
   // 'load' is declared in power.ini
@@ -42,7 +42,7 @@ void loadSetup() {
 #ifndef CALIBRATE
   // In lieu of a calibration mode and way to save it, manually.
   // This zeros, or tares.
-  float offset = LOAD_OFFSET;  // Steve Merckx
+  float offset = LOAD_OFFSET; 
   load.set_offset(offset);
 #endif // CALIBRATE
   
