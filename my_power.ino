@@ -84,7 +84,6 @@ void loop() {
   static float dps = 0.f;
   static float avgDps = 0.f;
   // Cadence is calculated by increasing total revolutions.
-  // TODO it's possible this rolls over, about 12 hours at 90RPM for 16 bit unsigned.
   static uint16_t totalCrankRevs = 0;
   // Vars for force
   static double force = 0.f;
@@ -179,14 +178,6 @@ void loop() {
       }
       blePublishPower(power, totalCrankRevs, timeNow);
 
-#ifdef BLE_LOGGING
-      // It's not even useful for sending cadence to the computer, ironically.
-      int16_t cadence = getCadence(avgDps);
-      // Log chars over BLE, for some insight when not wired to a
-      // laptop. Need to keep total ASCII to 20 chars or less.
-      blePublishLog("B%.1f %.1f %d", avgForce, mps, power);
-      blePublishLog("%d: %d polls", millis() / 1000, numPolls);
-#endif
 
       // Reset the latest update to now.
       lastUpdate = timeNow;
