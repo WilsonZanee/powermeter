@@ -46,7 +46,7 @@
 // is nice. 
 // TODO Though not optimal for power, not sure how much it takes.
 #define LED_PIN 33
-#define SD_CS_PIN 5 //Set this pin
+#define SD_CS_PIN 10 //Set this pin
 
 MPU6050 gyro;
 HX711 load;
