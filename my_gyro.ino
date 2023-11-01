@@ -7,7 +7,7 @@
 
 #define CALIBRATION_SAMPLES 40
 
-#define GYRO_INT_PIN A4 //TODO Check pin on setup
+#define GYRO_INT_PIN D18 //TODO Check pin on setup - I think this is wrong
 
 /**
  *  Calibrate and initialize the gyroscope
