@@ -174,7 +174,7 @@ Serial.print(F("Pwr: ")); Serial.println(power);
     if (pedaling) {
       totalCrankRevs += 1;
     }
-    blePublishPower(power, totalCrankRevs, timeNow);
+    //blePublishPower(power, totalCrankRevs, timeNow);
 
 
     // Reset the latest update to now.
