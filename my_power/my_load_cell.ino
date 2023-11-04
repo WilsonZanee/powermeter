@@ -26,6 +26,7 @@
 #define EXCIT_NEG 3  //TODO Probably needs to be adjust for our setup
 
 void loadSetup() {
+  Serial.println("Starting Load Cell setup");
   // 'load' is declared in power.ini
   scale.begin(EXCIT_POS, EXCIT_NEG);
   // Set the scale for the multiplier to get grams.
@@ -37,6 +38,7 @@ void loadSetup() {
 // TODO get a calibration mode.
 #ifdef CALIBRATE
   scale.tare(NUM_TARE_CALLS); 
+  Serial.println("Taring the load cell");
 #endif // CALIBRATE
 
 #ifndef CALIBRATE
@@ -56,8 +58,10 @@ void loadSetup() {
 #ifdef DEBUG
 void showConfigs(void) {
   Serial.println();
-  Serial.printf(" * Load offset:       %d\n", scale.get_offset());
-  Serial.printf(" * Load multiplier:   %.3f\n", scale.get_scale());
+  Serial.print(" * Load offset:       ");
+  Serial.println(scale.get_offset());
+  Serial.print(" * Load multiplier:   ");
+  Serial.println(scale.get_scale());
   Serial.println("Power meter calibrated.");
 }
 #endif // DEBUG

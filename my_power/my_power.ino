@@ -4,7 +4,6 @@
 \
 //Importing standard libraries
 #include <Wire.h>  
-#include <bluefruit.h>
 #include <SD.h>
 #include <SPI.h>
 
@@ -12,22 +11,22 @@
 #include "HX711.h"
 
 // Zane
-//#define DEBUG
-//#define CALIBRATE
-//#define DISABLE_LOGGING  // to the SD
+#define DISABLE_LOGGING  // to the SD
 // Crank length, in meters
 #define CRANK_RADIUS 0.170
 #define LOAD_OFFSET 255904.f //need to get this from callibration
 #define HX711_MULT  -4840 //need to get this from callibration
-#define GYRO_OFFSET -31 //need to get this from callibration
+#define GYRO_OFFSET 31 //need to get this from callibration
 // Hooked up the wires backwards apparently, force is negated.
 // If it isn't, just set to 1.
-#define HOOKEDUPLOADBACKWARDS -1
+#define HOOKEDUPLOADBACKWARDS 1
 #define DEV_NAME "WilsonZ"
+#define CALIBRATE
+#define DEBUG
 
 // Universal defines
 
-#define VBATPIN A7  //Battery Pin (I Think)
+//#define VBATPIN A7  //Battery Pin (I Think)
 
 // The pause for the loop, and based on testing the actual
 // calls overhead take about 20ms themselves E.g. at 50ms delay, 
@@ -46,7 +45,7 @@
 // is nice. 
 // TODO Though not optimal for power, not sure how much it takes.
 #define LED_PIN 33
-#define SD_CS_PIN D10 //Set this pin
+#define SD_CS_PIN 10 //Set this pin
 
 MPU6050 gyro;
 HX711 scale;
@@ -126,6 +125,7 @@ void loop() {
   Serial.print(F("DPS:   ")); Serial.println(dps);
 #endif  // DEBUG
 
+/*
   if (Bluefruit.connected()) {
     // We have a central connected
     long timeNow = millis();
@@ -194,8 +194,9 @@ void loop() {
         lastInfrequentUpdate = timeNow;
       }
     }
-  }
 
+  }
+    */
   delay(LOOP_DELAY);
 }
 
@@ -246,6 +247,7 @@ int16_t calcPower(double footSpeed, double force) {
 /**
  * 
  */
+/**
 uint8_t checkBatt() {     
     float measuredvbat = analogRead(VBATPIN);
     measuredvbat *= 2;    // Board divided by 2, so multiply back
@@ -273,3 +275,4 @@ uint8_t checkBatt() {
       return 5;
     }
 }
+*/

@@ -7,7 +7,7 @@
 
 #define CALIBRATION_SAMPLES 40
 
-#define GYRO_INT_PIN D18 //TODO Check pin on setup - I think this is wrong
+#define GYRO_INT_PIN 18 //TODO Check pin on setup - I think this is wrong
 
 /**
  *  Calibrate and initialize the gyroscope
@@ -51,8 +51,9 @@ void gyroSetup() {
   float deltaZ = sumZ / (CALIBRATION_SAMPLES - 2);
   deltaZ = -1 * deltaZ;
 #ifdef DEBUG
-  Serial.printf("Discounting max (%d) and min (%d) samples.\n", maxSample, minSample);
-  Serial.printf("Gyro calculated offset: %f\n", deltaZ); 
+  //Serial.print("Discounting max " + maxSample + " and min " + minSample + " samples.");
+  Serial.print("Gyro calculated offset: "); 
+  Serial.println(deltaZ);
 #endif // DEBUG
 #endif // CALIBRATE
 
@@ -62,9 +63,12 @@ void gyroSetup() {
 #endif // CALIBRATE
 
   // Set that calibration
+  Serial.println("Setting gyro calibration");
+  delay(100);
   gyro.setZGyroOffset(deltaZ);
 
   // Set zero motion detection
+  Serial.println("Setting zero motion detection");
   gyro.setIntZeroMotionEnabled(true);
   gyro.setZeroMotionDetectionThreshold(4);
   // 1 LSB = 64ms. So 30s = 
@@ -72,7 +76,7 @@ void gyroSetup() {
   gyro.setInterruptLatchClear(true);
 
   pinMode(GYRO_INT_PIN, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(GYRO_INT_PIN), motionDetectChange, RISING);
+  //attachInterrupt(digitalPinToInterrupt(GYRO_INT_PIN), motionDetectChange, RISING);  //TODO - Come back and fix this
 
 #ifdef DEBUG
   dumpSettings();
@@ -93,9 +97,9 @@ void motionDetectChange() {
  * This doesn't do anything but echo applied setting on the MPU.
  */
 void dumpSettings() {
-  Serial.println();
-  Serial.printf(" * Gyroscope Sleep Mode: %d\n", gyro.getSleepEnabled() ? "Enabled" : "Disabled");
-  Serial.printf(" * Gyroscope offset:     %d\n", gyro.getZGyroOffset());
+  Serial.println("Dumping Settings");
+ // Serial.printf(" * Gyroscope Sleep Mode: %d\n", gyro.getSleepEnabled() ? "Enabled" : "Disabled");
+ // Serial.printf(" * Gyroscope offset:     %d\n", gyro.getZGyroOffset());
 }
 
 /**
