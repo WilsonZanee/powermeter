@@ -125,78 +125,78 @@ void loop() {
   Serial.print(F("DPS:   ")); Serial.println(dps);
 #endif  // DEBUG
 
-/*
-  if (Bluefruit.connected()) {
-    // We have a central connected
-    long timeNow = millis();
-    long timeSinceLastUpdate = timeNow - lastUpdate;
-    // Must ensure there are more than 2 polls, because we're tossing the high and low.
-    // Check to see if the updateTime fun determines the cranks are cranking (in which)
-    // case it'll aim to update once per revolution. If that's the case,
-    // increment crank revs.
-    bool pedaling = false;
-    if (timeSinceLastUpdate > updateTime(dps, &pedaling) && numPolls > 2) {
-      // Find the actual averages over the polling period.
-      avgDps = avgDps / numPolls;
-      // Subtract 2 from the numPolls for force because we're removing the high and
-      // low here.
-      avgForce = avgForce - minForce - maxForce;
-      avgForce = avgForce / (numPolls - 2);
 
-      // Convert dps to mps
-      float mps = getCircularVelocity(avgDps);
+  long timeNow = millis();
+  long timeSinceLastUpdate = timeNow - lastUpdate;
+  // Must ensure there are more than 2 polls, because we're tossing the high and low.
+  // Check to see if the updateTime fun determines the cranks are cranking (in which)
+  // case it'll aim to update once per revolution. If that's the case,
+  // increment crank revs.
+  bool pedaling = false;
+  if (timeSinceLastUpdate > updateTime(dps, &pedaling) && numPolls > 2) {
+    // Find the actual averages over the polling period.
+    avgDps = avgDps / numPolls;
+    // Subtract 2 from the numPolls for force because we're removing the high and
+    // low here.
+    avgForce = avgForce - minForce - maxForce;
+    avgForce = avgForce / (numPolls - 2);
 
-      // That's all the ingredients, now we can find the power.
-      int16_t power = calcPower(mps, avgForce);
+    // Convert dps to mps
+    float mps = getCircularVelocity(avgDps);
+
+    // That's all the ingredients, now we can find the power.
+    int16_t power = calcPower(mps, avgForce);
 
 #ifndef DISABLE_LOGGING
-      File logfile = SD.open("data.log", FILE_WRITE);
-      char msg[1024];
-      sprintf(msg, "%ld - Pedal? %s. Force: %.1f. Max: %.1f, Min: %.1f. DPS: %.1f, MPS: %.1f. Power: %d",
-              timeNow, pedaling ? "true" : "false", avgForce, maxForce, minForce, avgDps, mps, power);
-      logfile.println(msg);
-      logfile.close();
-      //Log.notice("%l - Pedaling? %t. Force: %F. Max: %F, Min: %F. DPS: %F, MPS: %F. Power: %d\n",
-      //           timeNow, pedaling, avgForce, maxForce, minForce, avgDps, mps, power);
+    File logfile = SD.open("data.log", FILE_WRITE);
+    char msg[1024];
+    sprintf(msg, "%ld - Pedal? %s. Force: %.1f. Max: %.1f, Min: %.1f. DPS: %.1f, MPS: %.1f. Power: %d",
+            timeNow, pedaling ? "true" : "false", avgForce, maxForce, minForce, avgDps, mps, power);
+    logfile.println(msg);
+    logfile.close();
+    //Log.notice("%l - Pedaling? %t. Force: %F. Max: %F, Min: %F. DPS: %F, MPS: %F. Power: %d\n",
+    //           timeNow, pedaling, avgForce, maxForce, minForce, avgDps, mps, power);
 #endif // DISABLE_LOGGING
 
-      // Also bake in a rolling average for all records reported to
-      // the head unit. Will hopefully smooth out the power meter
-      // spiking about.
-      //power = rollAvgPower(power, 0.7f);
+    // Also bake in a rolling average for all records reported to
+    // the head unit. Will hopefully smooth out the power meter
+    // spiking about.
+    //power = rollAvgPower(power, 0.7f);
 
 #ifdef DEBUG
-  // Just print these values to the serial, something easy to read.
-  Serial.print(F("Pwr: ")); Serial.println(power);
+// Just print these values to the serial, something easy to read.
+Serial.print(F("Pwr: ")); Serial.println(power);
 #endif  // DEBUG
 
-      // The time since last update, as published, is actually at
-      // a resolution of 1/1024 seconds, per the spec. BLE will convert, just send
-      // the time, in millis.
-      if (pedaling) {
-        totalCrankRevs += 1;
-      }
-      blePublishPower(power, totalCrankRevs, timeNow);
-
-
-      // Reset the latest update to now.
-      lastUpdate = timeNow;
-      // Let the averages from this polling period just carry over.
-      numPolls = 1;
-      maxForce = MIN_DOUBLE;
-      minForce = MAX_DOUBLE;
-
-      // And check the battery, don't need to do it nearly this often though.
-      // 1000 ms / sec * 60 sec / min * 5 = 5 minutes
-      if ((timeNow - lastInfrequentUpdate) > (1000 * 60 * 5)) {
-        float batPercent = checkBatt();
-        blePublishBatt(batPercent);
-        lastInfrequentUpdate = timeNow;
-      }
+    // The time since last update, as published, is actually at
+    // a resolution of 1/1024 seconds, per the spec. BLE will convert, just send
+    // the time, in millis.
+    if (pedaling) {
+      totalCrankRevs += 1;
     }
+    blePublishPower(power, totalCrankRevs, timeNow);
+
+
+    // Reset the latest update to now.
+    lastUpdate = timeNow;
+    // Let the averages from this polling period just carry over.
+    numPolls = 1;
+    maxForce = MIN_DOUBLE;
+    minForce = MAX_DOUBLE;
+
+    // And check the battery, don't need to do it nearly this often though.
+    // 1000 ms / sec * 60 sec / min * 5 = 5 minutes
+    /*
+    if ((timeNow - lastInfrequentUpdate) > (1000 * 60 * 5)) {
+      float batPercent = checkBatt();
+      blePublishBatt(batPercent);
+      lastInfrequentUpdate = timeNow;
+    }
+    */
+  
 
   }
-    */
+    
   delay(LOOP_DELAY);
 }
 
