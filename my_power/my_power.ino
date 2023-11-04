@@ -18,7 +18,7 @@
 // Crank length, in meters
 #define CRANK_RADIUS 0.170
 #define LOAD_OFFSET 255904.f //need to get this from callibration
-#define HX711_MULT  -2466.8989547 //need to get this from callibration
+#define HX711_MULT  -4840 //need to get this from callibration
 #define GYRO_OFFSET -31 //need to get this from callibration
 // Hooked up the wires backwards apparently, force is negated.
 // If it isn't, just set to 1.
@@ -49,7 +49,7 @@
 #define SD_CS_PIN D10 //Set this pin
 
 MPU6050 gyro;
-HX711 load;
+HX711 scale;
 
 
 void setup() {

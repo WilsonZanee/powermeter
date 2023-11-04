@@ -22,31 +22,31 @@
 #define NUM_RAW_SAMPLES 1
 
 // Pins we're using.
-#define EXCIT_POS A0  //TODO Probably needs to be adjust for our setup
-#define EXCIT_NEG A1  //TODO Probably needs to be adjust for our setup
+#define EXCIT_POS 2  //TODO Probably needs to be adjust for our setup
+#define EXCIT_NEG 3  //TODO Probably needs to be adjust for our setup
 
 void loadSetup() {
   // 'load' is declared in power.ini
-  load.begin(EXCIT_POS, EXCIT_NEG);
+  scale.begin(EXCIT_POS, EXCIT_NEG);
   // Set the scale for the multiplier to get grams.
-  load.set_scale(HX711_MULT);
+  scale.set_scale(HX711_MULT);
   // Lots of calls to get load on startup, this is the offset
   // that will be used throughout. Make sure no weight on the
   // pedal at startup, obviously.
 
 // TODO get a calibration mode.
 #ifdef CALIBRATE
-  load.tare(NUM_TARE_CALLS); 
+  scale.tare(NUM_TARE_CALLS); 
 #endif // CALIBRATE
 
 #ifndef CALIBRATE
   // In lieu of a calibration mode and way to save it, manually.
   // This zeros, or tares.
   float offset = LOAD_OFFSET; 
-  load.set_offset(offset);
+  scale.set_offset(offset);
 #endif // CALIBRATE
   
-  load.power_up();
+  scale.power_up();
 
 #ifdef DEBUG
   showConfigs();
@@ -56,8 +56,8 @@ void loadSetup() {
 #ifdef DEBUG
 void showConfigs(void) {
   Serial.println();
-  Serial.printf(" * Load offset:       %d\n", load.get_offset());
-  Serial.printf(" * Load multiplier:   %.3f\n", load.get_scale());
+  Serial.printf(" * Load offset:       %d\n", scale.get_offset());
+  Serial.printf(" * Load multiplier:   %.3f\n", scale.get_scale());
   Serial.println("Power meter calibrated.");
 }
 #endif // DEBUG
@@ -70,7 +70,7 @@ double getAvgForce(const double & lastAvg) {
   const static double WEIGHT = 0.80;
   static double currentData = 0;
 
-  currentData = load.get_units(NUM_RAW_SAMPLES) * HOOKEDUPLOADBACKWARDS;
+  currentData = scale.get_units(NUM_RAW_SAMPLES) * HOOKEDUPLOADBACKWARDS;
 
   // Return a rolling average, including the last avg readings.
   // e.g. if weight is 0.90, it's 10% what it used to be, 90% this new reading.
