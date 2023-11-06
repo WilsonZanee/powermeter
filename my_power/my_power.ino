@@ -14,8 +14,8 @@
 #define DISABLE_LOGGING  // to the SD
 // Crank length, in meters
 #define CRANK_RADIUS 0.170
-#define LOAD_OFFSET 255904.f //need to get this from callibration
-#define HX711_MULT  -4840 //need to get this from callibration
+#define LOAD_OFFSET 360000.f //need to get this from callibration
+#define HX711_MULT  -1060 //need to get this from callibration
 #define GYRO_OFFSET 31 //need to get this from callibration
 // Hooked up the wires backwards apparently, force is negated.
 // If it isn't, just set to 1.
