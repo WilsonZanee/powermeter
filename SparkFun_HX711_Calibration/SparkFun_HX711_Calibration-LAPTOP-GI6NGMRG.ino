@@ -65,11 +65,9 @@ void loop() {
 
   Serial.print("Reading: ");
   Serial.print(scale.get_units(), 1);
-  Serial.print(" N"); //Change this to kg and re-adjust the calibration factor if you follow SI units like a sane person
+  Serial.print(" lbs"); //Change this to kg and re-adjust the calibration factor if you follow SI units like a sane person
   Serial.print(" calibration_factor: ");
   Serial.print(calibration_factor);
-  Serial.print(" Offset ");
-  Serial.print(scale.get_offset());
   Serial.println();
 
   if(Serial.available())
