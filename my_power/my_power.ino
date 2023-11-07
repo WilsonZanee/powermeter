@@ -11,7 +11,7 @@
 #include "HX711.h"
 
 // Zane
-#define DISABLE_LOGGING  // to the SD
+//#define DISABLE_LOGGING  // to the SD
 // Crank length, in meters
 #define CRANK_RADIUS 0.170
 #define LOAD_OFFSET 360000.f //need to get this from callibration
@@ -23,6 +23,9 @@
 #define DEV_NAME "WilsonZ"
 #define CALIBRATE
 #define DEBUG
+
+const String LOGNAME =  "data.csv";
+const String DELIM = ",";
 
 // Universal defines
 
@@ -60,11 +63,7 @@ void setup() {
   loadSetup();
 
 #ifndef DISABLE_LOGGING
-  // Setup our SD logger, if present.
-  while (!SD.begin(SD_CS_PIN)) {
-    Serial.println("Failed to find SD card, not present");
-    delay(1000);
-  }
+  logSetup();
 #endif
 
 #ifdef DEBUG
@@ -148,14 +147,7 @@ void loop() {
     int16_t power = calcPower(mps, avgForce);
 
 #ifndef DISABLE_LOGGING
-    File logfile = SD.open("data.log", FILE_WRITE);
-    char msg[1024];
-    sprintf(msg, "%ld - Pedal? %s. Force: %.1f. Max: %.1f, Min: %.1f. DPS: %.1f, MPS: %.1f. Power: %d",
-            timeNow, pedaling ? "true" : "false", avgForce, maxForce, minForce, avgDps, mps, power);
-    logfile.println(msg);
-    logfile.close();
-    //Log.notice("%l - Pedaling? %t. Force: %F. Max: %F, Min: %F. DPS: %F, MPS: %F. Power: %d\n",
-    //           timeNow, pedaling, avgForce, maxForce, minForce, avgDps, mps, power);
+    logData(timeNow, power, avgForce, avgDps, mps, pedaling);
 #endif // DISABLE_LOGGING
 
     // Also bake in a rolling average for all records reported to
@@ -242,6 +234,33 @@ float updateTime(float dps, bool *pedaling) {
 int16_t calcPower(double footSpeed, double force) {
   // Multiply it all by 2, because we only have the sensor on 1/2 the cranks.
   return (2 * force * footSpeed);
+}
+
+void logSetup() {
+  // Setup our SD logger, if present.
+  while (!SD.begin(SD_CS_PIN)) {
+    Serial.println("Failed to find SD card, not present");
+    delay(1000);
+  }
+  //Printing Header
+  File logfile = SD.open(LOGNAME, FILE_WRITE);
+  char msg[1024];
+  sprintf(msg, "Time(s),Power(W),avg-F (N),avg-Dps,Pedal Speed,Pedaling?");
+  logfile.println(msg);
+  logfile.close();
+}
+
+void logData(long timeNow,int16_t power, double avgForce, float avgDps, float mps, bool pedaling) {
+  long timeInSeconds = timeNow / 1000;
+  if (SD.exists(LOGNAME)) {
+    File logfile = SD.open(LOGNAME, FILE_WRITE);
+    char msg[1024];
+    sprintf(msg, "%ld,%d,%.1f,%.1f,%.1f,%s", timeNow, power, avgForce, avgDps, mps, pedaling);
+    logfile.println(msg);
+    logfile.close();
+  } else {
+    Serial.print("SD card not visible");
+  }
 }
 
 /**
