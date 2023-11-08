@@ -122,6 +122,7 @@ void loop() {
   // Just print these values to the serial, something easy to read.
   Serial.print(F("Force: ")); Serial.println(force);
   Serial.print(F("DPS:   ")); Serial.println(dps);
+  Serial.print(F("Avg Dps:   ")); Serial.println(avgDps);
 #endif  // DEBUG
 
 
@@ -243,7 +244,7 @@ void logSetup() {
     delay(1000);
   }
   //Printing Header
-  File logfile = SD.open(LOGNAME, FILE_WRITE);
+  File logfile = SD.open(LOGNAME, FILE_WRITE | O_TRUNC);
   char msg[1024];
   sprintf(msg, "Time(s),Power(W),avg-F (N),avg-Dps,Pedal Speed,Pedaling?");
   logfile.println(msg);
@@ -252,14 +253,26 @@ void logSetup() {
 
 void logData(long timeNow,int16_t power, double avgForce, float avgDps, float mps, bool pedaling) {
   long timeInSeconds = timeNow / 1000;
+  String pedalBool = getStringFromBool(pedaling);
+  
   if (SD.exists(LOGNAME)) {
     File logfile = SD.open(LOGNAME, FILE_WRITE);
-    char msg[1024];
-    sprintf(msg, "%ld,%d,%.1f,%.1f,%.1f,%s", timeNow, power, avgForce, avgDps, mps, pedaling);
+    //char msg[1024];
+    //sprintf(msg, "%ld,%d,%f,%f,%f,%s", timeNow, power, avgForce, avgDps, mps, pedalBool);
+    String msg = String(timeInSeconds) + DELIM + String(power) + DELIM + String(avgForce) + DELIM + String(avgDps) + DELIM + String(mps) + DELIM + pedalBool;
+    Serial.println(msg);
     logfile.println(msg);
     logfile.close();
   } else {
     Serial.print("SD card not visible");
+  }
+}
+
+String getStringFromBool(bool boolArg) {
+  if (boolArg) {
+    return "True";
+  } else if (!boolArg) {
+    return "False";
   }
 }
 
